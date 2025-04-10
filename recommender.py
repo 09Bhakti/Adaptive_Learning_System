@@ -1,4 +1,10 @@
 import pandas as pd
+import numpy as np
+import random
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from collections import deque
 
 def recommend_content(student_id, n_recommendations=3):
     if student_id not in pivot_table.index:
@@ -102,12 +108,7 @@ recommended_content = recommend_ncf(10)
 print(f"Recommended Content for Student 10: {recommended_content}")
 
 
-import numpy as np
-import random
-import torch
-import torch.nn as nn
-import torch.optim as optim
-from collections import deque
+
 
 # Define difficulty levels
 difficulty_levels = ['easy', 'medium', 'hard']
