@@ -13,8 +13,8 @@ def recommend_content(student_id, n_recommendations=3):
     return recommended_content.tolist()
 
 # Example: Recommend content for student_id = 10
-recommended_content = recommend_content(10)
-print(f"Recommended Content for Student 10: {recommended_content}")
+# recommended_content = recommend_content(10)
+# print(f"Recommended Content for Student 10: {recommended_content}")
 
 
 import torch
