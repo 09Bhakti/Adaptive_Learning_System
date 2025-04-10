@@ -59,5 +59,5 @@ It mimics the role of a **virtual tutor** — constantly monitoring progress, id
 
 ---
 
-## 📁 Project Structure
+
 
