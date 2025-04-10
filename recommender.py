@@ -1,3 +1,5 @@
+import pandas as pd
+
 def recommend_content(student_id, n_recommendations=3):
     if student_id not in pivot_table.index:
         print("Student not found!")
