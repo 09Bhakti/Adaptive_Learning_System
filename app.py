@@ -1,8 +1,8 @@
 
 import streamlit as st
 import pandas as pd
-from utils.clustering import cluster_students_advanced
-from utils.recommender import predict_learning_strategy
+from clustering import cluster_students_advanced
+from recommender import predict_learning_strategy
 
 st.title("📊 Student Learning Profile Analyzer")
 
