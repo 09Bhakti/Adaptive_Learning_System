@@ -371,6 +371,48 @@ if p_value < 0.05:
 else:
     print("No significant difference between A and B. ❌")
 
+# ---------------------------------------------------------------------------------------------------
+# Strategy Prediction Based on Profiling Features
+# ---------------------------------------------------------------------------------------------------
+
+def predict_learning_strategy(row):
+    """
+    Predict the learning strategy and difficulty level for a student
+    based on their profiling features (e.g., score, time spent, sentiment).
+
+    Parameters:
+        row (pd.Series): One row of student profiling data
+
+    Returns:
+        dict: Recommendation including difficulty, risk level, and suggestion
+    """
+    if row['sentiment_avg'] < -0.3 or row['recent_score_delta'] < -10:
+        return {
+            "difficulty": "Easy",
+            "risk": "High",
+            "recommendation": "Provide review material & simpler exercises"
+        }
+
+    elif row['recent_score_delta'] > 5 and row['avg_score'] > 75:
+        return {
+            "difficulty": "Hard",
+            "risk": "Low",
+            "recommendation": "Introduce advanced concepts"
+        }
+
+    elif row['avg_time_spent'] > 300:
+        return {
+            "difficulty": "Medium",
+            "risk": "Medium",
+            "recommendation": "Add interactive/video-based content"
+        }
+
+    else:
+        return {
+            "difficulty": "Medium",
+            "risk": "Low",
+            "recommendation": "Continue current learning path"
+        }
 
 import pandas as pd
 import nltk
