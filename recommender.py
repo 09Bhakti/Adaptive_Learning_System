@@ -31,7 +31,14 @@ import torch.optim as optim
 from sklearn.model_selection import train_test_split
 
 # Load dataset
-df = pd.read_csv("synthetic_student_data.csv")
+# REMOVE or COMMENT this line to avoid loading a CSV on import
+# df = pd.read_csv("synthetic_student_data.csv")
+
+# OR, only allow it during local testing:
+if __name__ == "__main__":
+    df = pd.read_csv("synthetic_student_data.csv")
+    print(df.head())  # Optional testing
+
 
 # Encode student_id and content_id as indices
 student_ids = {id: i for i, id in enumerate(df['student_id'].unique())}
