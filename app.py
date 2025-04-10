@@ -1,13 +1,24 @@
 
 import streamlit as st
+import pandas as pd
+from utils.clustering import cluster_students_advanced
+from utils.recommender import predict_learning_strategy
 
-st.title("Adaptive Learning System")
+st.title("📊 Student Learning Profile Analyzer")
 
-score = st.slider("Enter your last test score:", 0, 100)
-if st.button("Get Recommendation"):
-    if score < 50:
-        st.write("📘 Beginner Level Content Recommended")
-    elif 50 <= score < 80:
-        st.write("📗 Intermediate Level Content Recommended")
-    else:
-        st.write("📕 Advanced Level Content Recommended")
+# Simulated Data Upload
+uploaded_file = st.file_uploader("Upload student performance CSV")
+
+if uploaded_file:
+    df = pd.read_csv(uploaded_file)
+    clusters_df = cluster_students_advanced(df)
+
+    student_id = st.selectbox("Select Student ID", clusters_df["student_id"])
+    student_row = clusters_df[clusters_df["student_id"] == student_id].iloc[0]
+
+    strategy = predict_learning_strategy(student_row)
+
+    st.subheader("📌 Personalized Recommendation")
+    st.write(f"Difficulty Level: **{strategy['difficulty']}**")
+    st.write(f"Engagement Risk: **{strategy['risk']}**")
+    st.write(f"Recommendation: {strategy['recommendation']}")
