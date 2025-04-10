@@ -1,35 +1,37 @@
-from sklearn.cluster import KMeans
-import matplotlib.pyplot as plt
-import seaborn as sns
-
-# Select features for clustering
-X = df[['score', 'time_spent']]
-
-# Apply K-Means clustering
-kmeans = KMeans(n_clusters=3, random_state=42)
-df['cluster'] = kmeans.fit_predict(X)
-
-# Plot the clusters
-plt.figure(figsize=(8, 6))
-sns.scatterplot(x=df['score'], y=df['time_spent'], hue=df['cluster'], palette='viridis')
-plt.xlabel('Score')
-plt.ylabel('Time Spent (seconds)')
-plt.title('Student Clusters Based on Performance')
-plt.show()
-
-
 import pandas as pd
-from sklearn.neighbors import NearestNeighbors
 import numpy as np
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
 
-# Load the generated dataset
-df = pd.read_csv("synthetic_student_data.csv")
+def extract_advanced_features(df):
+    recent_group = df.sort_values("timestamp").groupby("student_id").tail(3)
 
-# Create a pivot table (students as rows, content as columns, scores as values)
-pivot_table = df.pivot_table(index='student_id', columns='content_id', values='score').fillna(0)
+    features = df.groupby("student_id").agg({
+        "score": ["mean", "std"],
+        "time_spent": "mean",
+        "activity": "count",
+        "feedback_sentiment": "mean"
+    }).reset_index()
 
-# Fit the KNN model
-knn = NearestNeighbors(n_neighbors=5, metric='cosine')
-knn.fit(pivot_table)
+    recent_delta = recent_group.groupby("student_id")["score"].mean() - features[("score", "mean")].values
+    features["recent_score_delta"] = recent_delta.values
 
-# Function to recommend content for a student
+    features.columns = [
+        "student_id", "avg_score", "score_std", "avg_time_spent", 
+        "attempt_count", "sentiment_avg", "recent_score_delta"
+    ]
+    features = features.fillna(0)
+    return features
+
+def cluster_students_advanced(df, n_clusters=4):
+    features = extract_advanced_features(df)
+    X = features.drop(columns=["student_id"])
+    
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
+
+    kmeans = KMeans(n_clusters=n_clusters, random_state=42)
+    clusters = kmeans.fit_predict(X_scaled)
+
+    features["cluster"] = clusters
+    return features
