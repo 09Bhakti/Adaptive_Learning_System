@@ -4,7 +4,7 @@ import pandas as pd
 from clustering import cluster_students_advanced
 from recommender import predict_learning_strategy
 
-st.title("📊 Student Learning Profile Analyzer")
+st.title("📊 Adaptive Learning System")
 
 # Simulated Data Upload
 uploaded_file = st.file_uploader("Upload student performance CSV")
