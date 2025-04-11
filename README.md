@@ -59,5 +59,6 @@ It mimics the role of a **virtual tutor** — constantly monitoring progress, id
 
 ---
 
+Deploy the project using the link : https://adaptivelearningsystem-7d88dj5axtynga3inxlstv.streamlit.app/
 
 
