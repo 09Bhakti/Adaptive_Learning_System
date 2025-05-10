@@ -23,62 +23,46 @@
 #     st.write(f"Engagement Risk: **{strategy['risk']}**")
 #     st.write(f"Recommendation: {strategy['recommendation']}")
 
-
-# app.py
 import streamlit as st
-import pandas as pd
-from clustering import cluster_students_advanced
-from recommender import predict_learning_strategy
 
-st.set_page_config(
-    page_title="AI-Powered Adaptive Learning System",
-    page_icon="📚",
-    layout="wide",
-)
-
+st.set_page_config(page_title="AI Learning Pattern Analyzer & Predictor", layout="centered")
+st.title("AI Learning Pattern Analyzer & Predictor")
 st.markdown("""
-    <style>
-    .main-title {
-        font-size:40px !important;
-        color:#4A90E2;
-        font-weight:700;
-    }
-    .subheader {
-        font-size:20px !important;
-        margin-top:10px;
-    }
-    </style>
-""", unsafe_allow_html=True)
+This tool analyzes your learning patterns and predicts your skill level based on the data you provide. It also generates personalized recommendations and a study plan.
+""")
 
-st.markdown('<p class="main-title">📚 AI-Based Adaptive Learning Recommendation System</p>', unsafe_allow_html=True)
-
-st.sidebar.title("Upload Student Data")
-uploaded_file = st.sidebar.file_uploader("Upload CSV", type=["csv"])
-
-if uploaded_file:
-    df = pd.read_csv(uploaded_file)
-    clusters_df = cluster_students_advanced(df)
-
-    with st.sidebar:
-        student_id = st.selectbox("Select Student ID", clusters_df["student_id"])
-
-    student_row = clusters_df[clusters_df["student_id"] == student_id].iloc[0]
-    strategy = predict_learning_strategy(student_row)
-
+with st.form("learning_pattern_form"):
+    st.subheader("Learning Metrics")
     col1, col2 = st.columns(2)
-
     with col1:
-        st.subheader("🎯 Personalized Strategy")
-        st.markdown(f"**Recommended Difficulty:** {strategy['difficulty']}")
-        st.markdown(f"**Engagement Risk:** {strategy['risk']}")
-
+        study_hours = st.slider("Weekly Study Hours", 1, 40, 10, help="Estimated number of hours spent studying per week")
+        avg_score = st.slider("Average Quiz/Test Score (%)", 0, 100, 75, help="Your average score across assessments")
     with col2:
-        st.subheader("🧠 Actionable Guidance")
-        st.markdown(f"**What to do:** {strategy['recommendation']}")
+        course_completion = st.slider("Course Completion Rate (%)", 0, 100, 50, help="Percentage of courses completed")
+        consistency = st.slider("Learning Consistency (1-10)", 1, 10, 5, help="How consistent your study sessions are")
 
-    st.markdown("""---
-    <center><small>Developed for <strong>@Prasunet</strong> by Bhakti using Streamlit, AI, and ML models</small></center>
-    """, unsafe_allow_html=True)
-else:
-    st.info("Please upload a student performance CSV to get started.")
+    st.subheader("Additional Information")
+    col3, col4 = st.columns(2)
+    with col3:
+        learning_style = st.selectbox("Preferred Learning Style", ["visual", "auditory", "reading/writing", "kinesthetic"], help="Choose your preferred learning style")
+        difficulty = st.slider("Preferred Topic Difficulty (1-10)", 1, 10, 5, help="Level of challenge you prefer in learning material")
+    with col4:
+        interests = st.text_area("Learning Interests", placeholder="E.g., data science, web development, AI")
+        prior_knowledge = st.slider("Prior Knowledge (1-10)", 1, 10, 3, help="Your self-assessed prior knowledge")
 
+    submitted = st.form_submit_button("Analyze My Learning Pattern")
+
+    if submitted:
+        st.success("Form submitted successfully!")
+        st.write("### Summary of Inputs")
+        st.write(f"**Study Hours**: {study_hours} hours/week")
+        st.write(f"**Average Score**: {avg_score}%")
+        st.write(f"**Course Completion**: {course_completion}%")
+        st.write(f"**Consistency**: {consistency}/10")
+        st.write(f"**Learning Style**: {learning_style}")
+        st.write(f"**Preferred Difficulty**: {difficulty}/10")
+        st.write(f"**Prior Knowledge**: {prior_knowledge}/10")
+        st.write(f"**Learning Interests**: {interests}")
+
+        # This is where you would pass data to ML model or recommendation engine
+        st.info("This is a placeholder for recommendation output. Integrate model prediction here.")
