@@ -26,7 +26,7 @@
 import streamlit as st
 import pandas as pd
 from clustering import cluster_student
-from recommender import recommender
+from recommender import get_recommendations
 
 st.set_page_config(page_title="AI Learning Pattern Analyzer", layout="wide")
 
@@ -73,5 +73,5 @@ if submitted:
     st.write(f"🔍 **Predicted Cluster/Group:** {cluster_label}")
 
     st.markdown("## 📌 Personalized Recommendations")
-    recommendations = recommender(input_df)
+    recommendations = get_recommendations(input_df)
     st.success(recommendations)
