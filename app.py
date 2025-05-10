@@ -24,45 +24,54 @@
 #     st.write(f"Recommendation: {strategy['recommendation']}")
 
 import streamlit as st
+import pandas as pd
+from clustering import cluster_student
+from recommender import get_recommendations
 
-st.set_page_config(page_title="AI Learning Pattern Analyzer & Predictor", layout="centered")
+st.set_page_config(page_title="AI Learning Pattern Analyzer", layout="wide")
+
 st.title("AI Learning Pattern Analyzer & Predictor")
-st.markdown("""
-This tool analyzes your learning patterns and predicts your skill level based on the data you provide. It also generates personalized recommendations and a study plan.
-""")
+st.markdown("This tool analyzes your learning patterns and predicts your skill level based on the data you provide. It also generates personalized recommendations and a study plan.")
 
-with st.form("learning_pattern_form"):
-    st.subheader("Learning Metrics")
-    col1, col2 = st.columns(2)
-    with col1:
-        study_hours = st.slider("Weekly Study Hours", 1, 40, 10, help="Estimated number of hours spent studying per week")
-        avg_score = st.slider("Average Quiz/Test Score (%)", 0, 100, 75, help="Your average score across assessments")
-    with col2:
-        course_completion = st.slider("Course Completion Rate (%)", 0, 100, 50, help="Percentage of courses completed")
-        consistency = st.slider("Learning Consistency (1-10)", 1, 10, 5, help="How consistent your study sessions are")
+with st.form("learning_form"):
+    with st.container():
+        col1, col2 = st.columns(2)
+        with col1:
+            study_hours = st.slider("Weekly Study Hours", 1, 40, 10, help="How many hours do you study per week?")
+            quiz_score = st.slider("Average Quiz/Test Score (%)", 0, 100, 75, help="Your average score in quizzes or tests.")
 
-    st.subheader("Additional Information")
+        with col2:
+            completion_rate = st.slider("Course Completion Rate (%)", 0, 100, 50, help="Percentage of completed courses.")
+            consistency = st.slider("Learning Consistency (1-10)", 1, 10, 5, help="How consistent is your study routine?")
+
+    st.markdown("### Additional Information")
     col3, col4 = st.columns(2)
     with col3:
-        learning_style = st.selectbox("Preferred Learning Style", ["visual", "auditory", "reading/writing", "kinesthetic"], help="Choose your preferred learning style")
-        difficulty = st.slider("Preferred Topic Difficulty (1-10)", 1, 10, 5, help="Level of challenge you prefer in learning material")
+        learning_style = st.selectbox("Preferred Learning Style", ["visual", "auditory", "reading/writing", "kinesthetic"], help="Choose your preferred learning style.")
+        topic_difficulty = st.slider("Preferred Topic Difficulty (1-10)", 1, 10, 5, help="Rate the difficulty level of topics you prefer.")
     with col4:
-        interests = st.text_area("Learning Interests", placeholder="E.g., data science, web development, AI")
-        prior_knowledge = st.slider("Prior Knowledge (1-10)", 1, 10, 3, help="Your self-assessed prior knowledge")
+        learning_interests = st.text_area("Learning Interests", placeholder="E.g., data science, web development, AI", help="Mention areas you are interested in.")
+        prior_knowledge = st.slider("Prior Knowledge (1-10)", 1, 10, 3, help="Your prior knowledge in the domain.")
 
     submitted = st.form_submit_button("Analyze My Learning Pattern")
 
-    if submitted:
-        st.success("Form submitted successfully!")
-        st.write("### Summary of Inputs")
-        st.write(f"**Study Hours**: {study_hours} hours/week")
-        st.write(f"**Average Score**: {avg_score}%")
-        st.write(f"**Course Completion**: {course_completion}%")
-        st.write(f"**Consistency**: {consistency}/10")
-        st.write(f"**Learning Style**: {learning_style}")
-        st.write(f"**Preferred Difficulty**: {difficulty}/10")
-        st.write(f"**Prior Knowledge**: {prior_knowledge}/10")
-        st.write(f"**Learning Interests**: {interests}")
+if submitted:
+    input_df = pd.DataFrame([{
+        "study_hours": study_hours,
+        "quiz_score": quiz_score,
+        "completion_rate": completion_rate,
+        "consistency": consistency,
+        "learning_style": learning_style,
+        "topic_difficulty": topic_difficulty,
+        "learning_interests": learning_interests,
+        "prior_knowledge": prior_knowledge
+    }])
 
-        # This is where you would pass data to ML model or recommendation engine
-        st.info("This is a placeholder for recommendation output. Integrate model prediction here.")
+    st.markdown("## 📊 Your Learning Pattern Analysis")
+    
+    cluster_label = cluster_student(input_df)
+    st.write(f"🔍 **Predicted Cluster/Group:** {cluster_label}")
+
+    st.markdown("## 📌 Personalized Recommendations")
+    recommendations = get_recommendations(input_df)
+    st.success(recommendations)
