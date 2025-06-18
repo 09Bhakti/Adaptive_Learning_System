@@ -23,7 +23,7 @@ def extract_advanced_features(df):
     features = features.fillna(0)
     return features
 
-def cluster_students_advanced(df, n_clusters=4):
+def cluster_students(df, n_clusters=4):
     features = extract_advanced_features(df)
     X = features.drop(columns=["student_id"])
     
