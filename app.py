@@ -1,12 +1,10 @@
 import streamlit as st
 import pandas as pd
 from clustering import cluster_student
-from recommender import get_recommendations  # This must be defined in recommender.py
+from recommender import get_recommendations
 
-# Set page layout
 st.set_page_config(page_title="AI Learning Pattern Analyzer", layout="wide")
 
-# Title and description
 st.title("AI Learning Pattern Analyzer & Predictor")
 st.markdown("This tool analyzes your learning patterns and predicts your skill level based on the data you provide. It also generates personalized recommendations and a study plan.")
 
