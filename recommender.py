@@ -24,7 +24,7 @@ def recommend_content(student_id, pivot_table, knn, n_recommendations=3):
     return recommended_content.tolist()
 
 ---------------------------------------------
-Neural Collaborative Filtering (NCF)
+#Neural Collaborative Filtering (NCF)
 ---------------------------------------------
 class NCF(nn.Module):
     def __init__(self, num_students, num_contents, embedding_dim=10):
