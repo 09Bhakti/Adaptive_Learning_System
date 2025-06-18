@@ -3,7 +3,9 @@
 import streamlit as st
 import pandas as pd
 from clustering import cluster_student
-from recommender import get_recommendations
+#from recommender import get_recommendations
+from recommender import recommend_ncf, recommend_difficulty, predict_learning_strategy
+
 
 st.set_page_config(page_title="AI Learning Pattern Analyzer", layout="wide")
 
